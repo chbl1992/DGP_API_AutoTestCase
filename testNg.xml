@@ -54,11 +54,11 @@
                 </methods>
             </class>
             //定制渲染接口
-            <class name="com.qishon.test.Gs_match_get3DModelInfoNewTestCase">
-                <methods>
-                    <include name="Gs_match_get3DModelInfoNewTest"/>
-                </methods>
-            </class>
+            <!--<class name="com.qishon.test.Gs_match_get3DModelInfoNewTestCase">-->
+                <!--<methods>-->
+                    <!--<include name="Gs_match_get3DModelInfoNewTest"/>-->
+                <!--</methods>-->
+            <!--</class>-->
         </classes>
     </test>
     <!--<listeners>-->
