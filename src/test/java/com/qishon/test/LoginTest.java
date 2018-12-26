@@ -24,6 +24,16 @@ public class LoginTest {
         UrlConfig.gs_prod_getProdOrdDetail_url = ConfigFiles.getUrl(InterfaceName.GS_PROD_GETPRODORDDETAIL);
         UrlConfig.gs_match_getFitProdInfoNew_url = ConfigFiles.getUrl(InterfaceName.GS_MATCH_GETFITPRODINFONEW);
         UrlConfig.gs_match_get3DModelInfoNew_url = ConfigFiles.getUrl(InterfaceName.GS_MATCH_GET3DMODELINFONEW);
+        UrlConfig.gs_match_getFitProdRenderNew_url = ConfigFiles.getUrl(InterfaceName.GS_MATCH_GETFITPRODRENDERNEW);
+        UrlConfig.gs_prod_getRegionByType_url = ConfigFiles.getUrl(InterfaceName.GS_PROD_GETREGIONBYTYPE);
+        UrlConfig.gs_prod_getReplacePart_url = ConfigFiles.getUrl(InterfaceName.GS_PROD_GETREPLACEPART);
+        UrlConfig.gs_mas_filterProdFabRicattr_url = ConfigFiles.getUrl(InterfaceName.GS_MAS_FILTERPRODFABRICATTR);
+        UrlConfig.gs_prod_detail_url = ConfigFiles.getUrl(InterfaceName.GS_PROD_DETAIL);
+        UrlConfig.gs_prod_getProdRegionByPrint_url = ConfigFiles.getUrl(InterfaceName.GS_PROD_GETPRODREGIONBYPRINT);
+        UrlConfig.gs_prod_getPrintByRegion_url = ConfigFiles.getUrl(InterfaceName.GS_PROD_GETPRINTBYREGION);
+        UrlConfig.gs_mas_getEMBCustomList_url = ConfigFiles.getUrl(InterfaceName.GS_MAS_GETEMBCUSTOMLIST);
+        UrlConfig.gs_cus_saveCustom_url = ConfigFiles.getUrl(InterfaceName.GS_CUS_SAVECUSTOM);
+        UrlConfig.gs_cus_getCustomList_url = ConfigFiles.getUrl(InterfaceName.GS_CUS_GETCUSTOMLIST);
 
     }
 

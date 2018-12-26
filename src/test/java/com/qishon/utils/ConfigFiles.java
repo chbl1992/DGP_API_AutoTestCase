@@ -44,6 +44,36 @@ public class ConfigFiles {
         if (name == InterfaceName.GS_MATCH_GET3DMODELINFONEW){
             uri = bundle.getString("gs_match_get3DModelInfoNew_url");
         }
+        if (name == InterfaceName.GS_MATCH_GETFITPRODRENDERNEW){
+            uri = bundle.getString("gs_match_getFitProdRenderNew_url");
+        }
+        if (name == InterfaceName.GS_PROD_GETREGIONBYTYPE){
+            uri = bundle.getString("gs_prod_getRegionByType_url");
+        }
+        if (name == InterfaceName.GS_PROD_GETREPLACEPART){
+            uri = bundle.getString("gs_prod_getReplacePart_url");
+        }
+        if (name == InterfaceName.GS_MAS_FILTERPRODFABRICATTR){
+            uri = bundle.getString("gs_mas_filterProdFabRicattr_url");
+        }
+        if (name == InterfaceName.GS_PROD_DETAIL){
+            uri = bundle.getString("gs_prod_detail_url");
+        }
+        if (name == InterfaceName.GS_PROD_GETPRODREGIONBYPRINT){
+            uri = bundle.getString("gs_prod_getProdRegionByPrint_url");
+        }
+        if (name == InterfaceName.GS_PROD_GETPRINTBYREGION){
+            uri = bundle.getString("gs_prod_getPrintByRegion_url");
+        }
+        if (name == InterfaceName.GS_MAS_GETEMBCUSTOMLIST){
+            uri = bundle.getString("gs_mas_getEMBCustomList_url");
+        }
+        if (name == InterfaceName.GS_CUS_SAVECUSTOM){
+            uri = bundle.getString("gs_cus_saveCustom_url");
+        }
+        if (name == InterfaceName.GS_CUS_GETCUSTOMLIST){
+            uri = bundle.getString("gs_cus_getCustomList_url");
+        }
         String testUrl = base_address + uri;
         return testUrl;
     }
