@@ -39,12 +39,11 @@ public class LoginTest {
 
     @Test(groups = "LoginTrue",description = "获取Token")
     public void getToken(){
+
         Response response = given()
                 .contentType("application/json")
-                //.header("Accept", "*/*")
-                .body("{\"platform\":\"DGP\",\"password\":\"123456\",\"username\":\"QS003\",\"domainUrl\":\"qsxls.iss.com:8088\",\"client_id\":\"u3dIssClient\",\"client_secret\":\"u3dIssClientSecret\"}")
+                 .body("{\"platform\":\"DGP\",\"password\":\"123456\",\"username\":\"QS003\",\"domainUrl\":\"qsxls.iss.com:8088\",\"client_id\":\"u3dIssClient\",\"client_secret\":\"u3dIssClientSecret\"}")
                 .post(UrlConfig.getToken_url);
-        //response.prettyPrint();
         Assert.assertEquals(response.getStatusCode(),200);
         response.prettyPrint();
         UrlConfig.access_token = response.jsonPath().getString("access_token");
@@ -60,6 +59,7 @@ public class LoginTest {
         System.out.println(response.getStatusCode());
         response.prettyPrint();
     }
+
 
     @Test(dependsOnMethods = "getToken",groups = "loginTrue",description = "修改密码接口测试",priority = 2)
     public void alter_PWD(){

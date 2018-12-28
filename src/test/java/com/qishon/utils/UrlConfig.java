@@ -1,9 +1,9 @@
 package com.qishon.utils;
 
 import io.restassured.http.Headers;
-import lombok.Data;
-
-@Data
+//import lombok.Data;
+//
+//@Data
 public class UrlConfig {
 
     //获取Token
