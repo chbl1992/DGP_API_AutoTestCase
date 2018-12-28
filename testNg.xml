@@ -25,11 +25,11 @@
                 </methods>
             </class>
             <!--//设备注册-->
-            <class name="com.qishon.test.Gs_sys_regDeviceInfTestCase">
-                <methods>
-                    <include name="Gs_sys_regDeviceInfTest"/>
-                </methods>
-            </class>
+            <!--<class name="com.qishon.test.Gs_sys_regDeviceInfTestCase">-->
+                <!--<methods>-->
+                    <!--<include name="Gs_sys_regDeviceInfTest"/>-->
+                <!--</methods>-->
+            <!--</class>-->
             <!--//获取商品墙商品列表-->
             <class name="com.qishon.test.Gs_prod_ListTestCase">
                 <methods>
