@@ -224,6 +224,7 @@ public class LoginTest {
         } else {//验证缺少参数的情况
             Response response = given()
                     .contentType("application/json")
+                    .auth().oauth2(UrlConfig.access_token)
                     .body("{\"oldPwd\":\""+oldPwd+"\",\"newPwd\":\""+newPwd+"\",\""+userNameKey+"\":\""+userName+"\"}")
                     .put(alter_PWD_url);
             response.prettyPrint();
