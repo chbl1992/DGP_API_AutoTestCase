@@ -8,6 +8,7 @@
                 <methods>
                     <include name="beforeTest_url"/>
                     <include name="getToken"/>
+                    <include name="getTokenTest"/>
                     <include name="gs_sys_shopLogin"/>
                     <include name="alter_PWD"/>
                 </methods>
