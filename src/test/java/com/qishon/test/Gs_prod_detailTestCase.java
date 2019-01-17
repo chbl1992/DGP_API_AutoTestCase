@@ -14,18 +14,18 @@ public class Gs_prod_detailTestCase {
     @DataProvider(name="gs_prod_detailTestData")
     public Object[][] gs_prod_detailTestData(){
         return new Object[][]{
+                {0,"QZJ001","239","523","DGP"},
                 {1,"QZJ001","239","523","DGP"},
-                {2,"QZJ001","239","523","DGP"},
-                {1,"","","",""},
-                {1,"QZJ111","239","523","DGP"},
-                {1,"","239","523","DGP"},
-                {1,"QZJ001","333","523","DGP"},
-                {1,"QZJ001","","523","DGP"},
-                {1,"QZJ001","239","555","DGP"},
-                {1,"QZJ001","239","","DGP"},
-                {1,"QZJ001","239","523","PC"},
-                {1,"QZJ001","239","523",""},
-                {0,"QZJ001","239","523","DGP"}
+                {2,"","","",""},
+                {2,"QZJ111","239","523","DGP"},
+                {2,"","239","523","DGP"},
+                {2,"QZJ001","333","523","DGP"},
+                {2,"QZJ001","","523","DGP"},
+                {2,"QZJ001","239","555","DGP"},
+                {2,"QZJ001","239","","DGP"},
+                {2,"QZJ001","239","523","PC"},
+                {2,"QZJ001","239","523",""},
+                {3,"QZJ001","239","523","DGP"}
         };
     }
 
@@ -33,24 +33,30 @@ public class Gs_prod_detailTestCase {
     public void gs_prod_detailTest(int flag,String partCode,String companyId,String usrId,String platform){
         String gs_prod_detailTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_prod_detail_url,"QZJ001",partCode,
                 "239",companyId,"523",usrId,"DGP",platform );
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_prod_detailTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(gs_prod_detailTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(gs_prod_detailTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String gs_prod_detailTest_url1=gs_prod_detailTest_url.replace("&platform=DGP","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_prod_detailTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),200);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

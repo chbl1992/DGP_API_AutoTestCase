@@ -14,20 +14,20 @@ public class Gs_prod_getProdInfoTestCase {
     @DataProvider(name="Gs_prod_getProdInfoTestData")
     public Object[][] Gs_prod_getProdInfoTestData(){
         return new Object[][]{
+                {0,"QZJ001","C85B76DB6828","239","523","DGP"},
                 {1,"QZJ001","C85B76DB6828","239","523","DGP"},
-                {2,"QZJ001","C85B76DB6828","239","523","DGP"},
-                {1,"","","","",""},
-                {1,"QZJ111","C85B76DB6828","239","523","DGP"},
-                {1,"","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","C85B76DB688","239","523","DGP"},
-                {1,"QZJ001","","239","523","DGP"},
-                {1,"QZJ001","C85B76DB6828","333","523","DGP"},
-                {1,"QZJ001","C85B76DB6828","","523","DGP"},
-                {1,"QZJ001","C85B76DB6828","239","555","DGP"},
-                {1,"QZJ001","C85B76DB6828","239","","DGP"},
-                {1,"QZJ001","C85B76DB6828","239","523","PC"},
-                {1,"QZJ001","C85B76DB6828","239","523",""},
-                {0,"QZJ001","C85B76DB6828","239","523","DGP"}
+                {2,"","","","",""},
+                {2,"QZJ111","C85B76DB6828","239","523","DGP"},
+                {2,"","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","C85B76DB688","239","523","DGP"},
+                {2,"QZJ001","","239","523","DGP"},
+                {2,"QZJ001","C85B76DB6828","333","523","DGP"},
+                {2,"QZJ001","C85B76DB6828","","523","DGP"},
+                {2,"QZJ001","C85B76DB6828","239","555","DGP"},
+                {2,"QZJ001","C85B76DB6828","239","","DGP"},
+                {2,"QZJ001","C85B76DB6828","239","523","PC"},
+                {2,"QZJ001","C85B76DB6828","239","523",""},
+                {3,"QZJ001","C85B76DB6828","239","523","DGP"}
         };
     }
 
@@ -35,24 +35,30 @@ public class Gs_prod_getProdInfoTestCase {
     public void Gs_prod_getProdInfoTest(int flag,String partCode,String deviceCode,String companyId,String usrId,String platform){
         String Gs_prod_getProdInfoTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_prod_getProdInfo_url,"QZJ001",partCode,
                 "C85B76DB6828",deviceCode,"239",companyId,"523",usrId,"DGP",platform);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_prod_getProdInfoTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(Gs_prod_getProdInfoTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(Gs_prod_getProdInfoTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String Gs_prod_getProdInfoTest_url1 = Gs_prod_getProdInfoTest_url.replace("&platform=DGP","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_prod_getProdInfoTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),200);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

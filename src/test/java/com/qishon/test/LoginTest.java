@@ -12,9 +12,10 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 /*
-   flag代表含义 1---参数正常、异常情况验证，包括正确、错误、为空、超出范围
-                2---缺少Token验证
-                0---缺少参数的情况
+   flag代表含义 0---参数正常情况验证
+                1---缺少Token验证
+                2---参数异常情况验证，包括错误、为空、超出范围
+                3---缺少参数的情况
  */
 public class LoginTest {
 
@@ -58,23 +59,23 @@ public class LoginTest {
     @DataProvider(name="getTokenTestData")
     public Object[][] getTokenTestData(){
         return new Object[][]{
-                {1,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"null","null","null","null","null","null","null","null"},
-                {1,"PC","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"null","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","1","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","null","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","PWD","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","QS0003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","null","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","LoginName","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","QS003","qsxls.iss.com:8888","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","QS003","null","u3dIssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","IssClient","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","null","u3dIssClientSecret"},
-                {1,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","IssClientSecret"},
-                {1,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","null"},
-                {0,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"}
+                {0,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"null","null","null","null","null","null","null","null"},
+                {2,"PC","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"null","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","1","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","null","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","PWD","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","QS0003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","null","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","LoginName","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","QS003","qsxls.iss.com:8888","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","QS003","null","u3dIssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","IssClient","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","null","u3dIssClientSecret"},
+                {2,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","IssClientSecret"},
+                {2,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","null"},
+                {3,"DGP","password","123456","username","QS003","qsxls.iss.com:8088","u3dIssClient","u3dIssClientSecret"}
         };
     }
 
@@ -82,7 +83,7 @@ public class LoginTest {
     public void getTokenTest(int flag,String platform,String pwdKey,String password,String userNameKey,String userName,
                          String domainUrl,String client_id,String client_secret){
 
-        if (flag == 1){//参数正常、异常的情况
+        if (flag == 1){//参数正常
             Response response = given()
                     .contentType("application/json")
                     .body("{\"platform\":\""+platform+"\",\""+pwdKey+"\":\""+password+"\",\""+userNameKey+"\":\""+userName+
@@ -90,13 +91,21 @@ public class LoginTest {
                     .post(UrlConfig.getToken_url);
             Assert.assertEquals(response.getStatusCode(),200);
             response.prettyPrint();
-        }else {//缺少参数的情况
+        }else if (flag == 2){//参数异常
+            Response response = given()
+                    .contentType("application/json")
+                    .body("{\"platform\":\""+platform+"\",\""+pwdKey+"\":\""+password+"\",\""+userNameKey+"\":\""+userName+
+                            "\",\"domainUrl\":\""+domainUrl+"\",\"client_id\":\""+client_id+"\",\"client_secret\":\""+client_secret+"\"}")
+                    .post(UrlConfig.getToken_url);
+            Assert.assertEquals(response.getStatusCode(),500);
+            response.prettyPrint();
+        }else{//缺少参数的情况
             Response response = given()
                     .contentType("application/json")
                     .body("{\"platform\":\""+platform+"\",\""+pwdKey+"\":\""+password+"\",\""+userNameKey+"\":\""+userName+
                             "\",\"domainUrl\":\""+domainUrl+"\",\"client_id\":\""+client_id+"\"}")
                     .post(UrlConfig.getToken_url);
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
             response.prettyPrint();
         }
     }
@@ -104,36 +113,36 @@ public class LoginTest {
     @DataProvider(name="gs_sys_shopLoginData")
     public Object[][] gs_sys_shopLoginData(){
         return new Object[][]{
+                {0,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
                 {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"","","","null","null","usrName","null","loginPwd","null","null","null","null","null"},
-                {1,"555","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","555","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","PC","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","null","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0055","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","null","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6888","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","null","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS333","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","LoginName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F888E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","null","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","password","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_GUIDER","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","null","zh-CN","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","UTF-8","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","null","D_DIPAD","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DPC","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","null","1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","2"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","-1"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","0"},
-                {1,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","null"},
-                {0,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"}
+                {2,"","","","null","null","usrName","null","loginPwd","null","null","null","null","null"},
+                {2,"555","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","555","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","PC","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","null","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0055","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","null","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6888","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","null","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS333","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","LoginName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F888E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","null","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","password","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_GUIDER","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","null","zh-CN","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","UTF-8","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","null","D_DIPAD","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DPC","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","null","1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","2"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","-1"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","0"},
+                {2,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","null"},
+                {3,"239","523","DGP","QS0001","C85B76DB6828","usrName","QS003","loginPwd","E10ADC3949BA59ABBE56E057F20F883E","D_SHOPGUIDER","zh-CN","D_DIPAD","1"}
         };
     }
 
@@ -142,7 +151,7 @@ public class LoginTest {
                                  String userNameKey,String userName,String loginPwdKey,String loginPwd,String jobType,
                                  String languageCode,String deviceType,String pwdFlag){
         String shopLogin_url = ReplaceUtils.replaceUtilsTools(UrlConfig.gs_sys_shopLogin_url,"239",companyId,"523",usrId,"DGP",platform);
-        if (flag == 1){//参数正常、异常情况验证
+        if (flag == 0){//参数正常情况验证
             Response response = given()
                     .contentType("application/json")
                     .auth().oauth2(UrlConfig.access_token )
@@ -153,7 +162,7 @@ public class LoginTest {
                     .post(shopLogin_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){//缺少Token的验证
+        }else if (flag == 1){//缺少Token的验证
             Response response = given()
                     .contentType("application/json")
                     .body("{\"usrKey\":null,\"shopCode\":\""+shopCode+"\",\"deviceCode\":\""+deviceVode+"\",\"brandCode\":null," +
@@ -162,7 +171,18 @@ public class LoginTest {
                             "\"districtCode\":null,\"deviceType\":\""+deviceType+"\",\"pwdFlag\":\""+pwdFlag+"\"}")
                     .post(shopLogin_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),200);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){//参数异常的验证
+            Response response = given()
+                    .contentType("application/json")
+                    .auth().oauth2(UrlConfig.access_token )
+                    .body("{\"usrKey\":null,\"shopCode\":\""+shopCode+"\",\"deviceCode\":\""+deviceVode+"\",\"brandCode\":null," +
+                            "\""+userNameKey+"\":\""+userName+"\",\""+loginPwdKey+"\":\""+loginPwd+"\",\"jobType\":\""+jobType+"\"," +
+                            "\"languageCode\":\""+languageCode+"\",\"address\":null,\"provinceCode\":null,\"cityCode\":null," +
+                            "\"districtCode\":null,\"deviceType\":\""+deviceType+"\",\"pwdFlag\":\""+pwdFlag+"\"}")
+                    .post(shopLogin_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {//缺少参数的验证
             Response response = given()
                     .contentType("application/json")
@@ -173,32 +193,32 @@ public class LoginTest {
                             "\"districtCode\":null,\"deviceType\":\""+deviceType+"\"}")
                     .post(shopLogin_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),200);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 
     @DataProvider(name="alter_PWDData")
     public Object[][] alter_PWDData(){
         return new Object[][]{
+                {0,"239","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
                 {1,"239","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {2,"239","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"","","","null","null","usrName","null","null"},
-                {1,"333","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","555","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","PC","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","","123456","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","DGP","111","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","DGP","null","654321","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","DGP","123456","?!.","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","DGP","123456","null","usrName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","DGP","123456","654321","usrName","QS333","D_SHOPGUIDER"},
-                {1,"239","523","DGP","123456","654321","usrName","null","D_SHOPGUIDER"},
-                {1,"239","523","DGP","123456","654321","LoginName","QS003","D_SHOPGUIDER"},
-                {1,"239","523","DGP","123456","654321","usrName","QS003","D_GUIDER"},
-                {1,"239","523","DGP","123456","654321","usrName","QS003","null"},
-                {0,"239","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"}
+                {2,"","","","null","null","usrName","null","null"},
+                {2,"333","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","555","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","PC","123456","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","","123456","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","DGP","111","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","DGP","null","654321","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","DGP","123456","?!.","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","DGP","123456","null","usrName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","DGP","123456","654321","usrName","QS333","D_SHOPGUIDER"},
+                {2,"239","523","DGP","123456","654321","usrName","null","D_SHOPGUIDER"},
+                {2,"239","523","DGP","123456","654321","LoginName","QS003","D_SHOPGUIDER"},
+                {2,"239","523","DGP","123456","654321","usrName","QS003","D_GUIDER"},
+                {2,"239","523","DGP","123456","654321","usrName","QS003","null"},
+                {3,"239","523","DGP","123456","654321","usrName","QS003","D_SHOPGUIDER"}
         };
     }
 
@@ -206,7 +226,7 @@ public class LoginTest {
     public void alter_PWD(int flag,String companyId,String usrId,String platform,String oldPwd,String newPwd,
                           String userNameKey,String userName,String jobType){
         String alter_PWD_url = ReplaceUtils.replaceUtilsTools(UrlConfig.gs_sys_amdpwd_url,"239",companyId,"523",usrId,"DGP",platform);
-        if (flag == 1){//验证参数正常、异常的情况
+        if (flag == 0){//验证参数正常的情况
             Response response = given()
                     .contentType("application/json")
                     .auth().oauth2(UrlConfig.access_token)
@@ -214,21 +234,29 @@ public class LoginTest {
                     .put(alter_PWD_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){//验证缺少Token的情况
+        }else if (flag == 1){//验证缺少Token的情况
             Response response = given()
                     .contentType("application/json")
                     .body("{\"oldPwd\":\""+oldPwd+"\",\"newPwd\":\""+newPwd+"\",\""+userNameKey+"\":\""+userName+"\",\"jobType\":\""+jobType+"\"}")
                     .put(alter_PWD_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
-        } else {//验证缺少参数的情况
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){//验证参数异常的情况
+            Response response = given()
+                    .contentType("application/json")
+                    .auth().oauth2(UrlConfig.access_token)
+                    .body("{\"oldPwd\":\""+oldPwd+"\",\"newPwd\":\""+newPwd+"\",\""+userNameKey+"\":\""+userName+"\",\"jobType\":\""+jobType+"\"}")
+                    .put(alter_PWD_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
+        }else {//验证缺少参数的情况
             Response response = given()
                     .contentType("application/json")
                     .auth().oauth2(UrlConfig.access_token)
                     .body("{\"oldPwd\":\""+oldPwd+"\",\"newPwd\":\""+newPwd+"\",\""+userNameKey+"\":\""+userName+"\"}")
                     .put(alter_PWD_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

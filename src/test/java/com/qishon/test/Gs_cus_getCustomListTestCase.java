@@ -14,22 +14,22 @@ public class Gs_cus_getCustomListTestCase {
     @DataProvider(name="gs_cus_getCustomListTestData")
     public Object[][] gs_cus_getCustomListTestData(){
         return new Object[][]{
+                {0,"QZJ001","QS0001","C85B76DB6828","239","523","DGP"},
                 {1,"QZJ001","QS0001","C85B76DB6828","239","523","DGP"},
-                {2,"QZJ001","QS0001","C85B76DB6828","239","523","DGP"},
-                {1,"","","","","",""},
-                {1,"QZJ111","QS0001","C85B76DB6828","239","523","DGP"},
-                {1,"","QS0001","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","QS1111","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","QS0001","C85B76DB6888","239","523","DGP"},
-                {1,"QZJ001","QS0001","","239","523","DGP"},
-                {1,"QZJ001","QS0001","C85B76DB6828","333","523","DGP"},
-                {1,"QZJ001","QS0001","C85B76DB6828","","523","DGP"},
-                {1,"QZJ001","QS0001","C85B76DB6828","239","555","DGP"},
-                {1,"QZJ001","QS0001","C85B76DB6828","239","","DGP"},
-                {1,"QZJ001","QS0001","C85B76DB6828","239","523","PC"},
-                {1,"QZJ001","QS0001","C85B76DB6828","239","523",""},
-                {0,"QZJ001","QS0001","C85B76DB6828","239","523","DGP"}
+                {2,"","","","","",""},
+                {2,"QZJ111","QS0001","C85B76DB6828","239","523","DGP"},
+                {2,"","QS0001","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","QS1111","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","QS0001","C85B76DB6888","239","523","DGP"},
+                {2,"QZJ001","QS0001","","239","523","DGP"},
+                {2,"QZJ001","QS0001","C85B76DB6828","333","523","DGP"},
+                {2,"QZJ001","QS0001","C85B76DB6828","","523","DGP"},
+                {2,"QZJ001","QS0001","C85B76DB6828","239","555","DGP"},
+                {2,"QZJ001","QS0001","C85B76DB6828","239","","DGP"},
+                {2,"QZJ001","QS0001","C85B76DB6828","239","523","PC"},
+                {2,"QZJ001","QS0001","C85B76DB6828","239","523",""},
+                {3,"QZJ001","QS0001","C85B76DB6828","239","523","DGP"}
         };
     }
 
@@ -37,24 +37,30 @@ public class Gs_cus_getCustomListTestCase {
     public void gs_cus_getCustomListTest(int flag,String partCode,String shopCode,String deviceCode,String companyId,String usrId,String platform){
         String gs_cus_getCustomListTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_cus_getCustomList_url,"QZJ001",partCode,
                 "QS0001",shopCode,"C85B76DB6828",deviceCode,"239",companyId,"523",usrId,"DGP",platform);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_cus_getCustomListTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(gs_cus_getCustomListTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(gs_cus_getCustomListTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String gs_cus_getCustomListTest_url1=gs_cus_getCustomListTest_url.replace("&platform=DGP","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_cus_getCustomListTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

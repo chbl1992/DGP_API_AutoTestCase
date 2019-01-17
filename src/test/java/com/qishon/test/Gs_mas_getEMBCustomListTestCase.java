@@ -14,18 +14,18 @@ public class Gs_mas_getEMBCustomListTestCase {
     @DataProvider(name="gs_mas_getEMBCustomListTestData")
     public Object[][] gs_mas_getEMBCustomListTestData(){
         return new Object[][]{
+                {0,"QZJ001","239","523","DGP"},
                 {1,"QZJ001","239","523","DGP"},
-                {2,"QZJ001","239","523","DGP"},
-                {1,"","","",""},
-                {1,"QZJ111","239","523","DGP"},
-                {1,"","239","523","DGP"},
-                {1,"QZJ001","333","523","DGP"},
-                {1,"QZJ001","","523","DGP"},
-                {1,"QZJ001","239","555","DGP"},
-                {1,"QZJ001","239","","DGP"},
-                {1,"QZJ001","239","523","PC"},
-                {1,"QZJ001","239","523",""},
-                {0,"QZJ001","239","523","DGP"}
+                {2,"","","",""},
+                {2,"QZJ111","239","523","DGP"},
+                {2,"","239","523","DGP"},
+                {2,"QZJ001","333","523","DGP"},
+                {2,"QZJ001","","523","DGP"},
+                {2,"QZJ001","239","555","DGP"},
+                {2,"QZJ001","239","","DGP"},
+                {2,"QZJ001","239","523","PC"},
+                {2,"QZJ001","239","523",""},
+                {3,"QZJ001","239","523","DGP"}
         };
     }
 
@@ -33,24 +33,30 @@ public class Gs_mas_getEMBCustomListTestCase {
     public void gs_mas_getEMBCustomListTest(int flag, String partCode,String companyId,String usrId,String platform){
         String gs_mas_getEMBCustomListTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_mas_getEMBCustomList_url,
                 "QZJ001",partCode,"239",companyId,"523",usrId,"DGP",platform);
-        if (flag == 1){
+        if (flag == 0){//参数正常的情况
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_mas_getEMBCustomListTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(gs_mas_getEMBCustomListTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(gs_mas_getEMBCustomListTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String gs_mas_getEMBCustomListTest_url1 = gs_mas_getEMBCustomListTest_url.replace("&platform=DGP","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_mas_getEMBCustomListTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

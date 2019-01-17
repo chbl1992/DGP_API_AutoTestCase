@@ -15,18 +15,18 @@ public class Gs_match_getFitProdInfoNewTestCase {
     @DataProvider(name="Gs_match_getFitProdInfoNewTestData")
     public Object[][] Gs_match_getFitProdInfoNewTestData(){
         return new Object[][]{
+                {0,"239","523","DGP","QZJ001"},
                 {1,"239","523","DGP","QZJ001"},
-                {2,"239","523","DGP","QZJ001"},
-                {1,"","","",""},
-                {1,"333","523","DGP","QZJ001"},
-                {1,"","523","DGP","QZJ001"},
-                {1,"239","555","DGP","QZJ001"},
-                {1,"239","","DGP","QZJ001"},
-                {1,"239","523","PC","QZJ001"},
-                {1,"239","523","","QZJ001"},
-                {1,"239","523","DGP","QZJ111"},
-                {1,"239","523","DGP",""},
-                {0,"239","523","DGP","QZJ001"}
+                {2,"","","",""},
+                {2,"333","523","DGP","QZJ001"},
+                {2,"","523","DGP","QZJ001"},
+                {2,"239","555","DGP","QZJ001"},
+                {2,"239","","DGP","QZJ001"},
+                {2,"239","523","PC","QZJ001"},
+                {2,"239","523","","QZJ001"},
+                {2,"239","523","DGP","QZJ111"},
+                {2,"239","523","DGP",""},
+                {3,"239","523","DGP","QZJ001"}
         };
     }
 
@@ -34,24 +34,30 @@ public class Gs_match_getFitProdInfoNewTestCase {
     public void Gs_match_getFitProdInfoNewTest(int flag,String companyId,String usrId,String platform,String prodCode){
         String Gs_match_getFitProdInfoNewTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_match_getFitProdInfoNew_url,
                 "239",companyId,"523",usrId,"DGP",platform,"QZJ001",prodCode);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_match_getFitProdInfoNewTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(Gs_match_getFitProdInfoNewTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag ==2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(Gs_match_getFitProdInfoNewTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String Gs_match_getFitProdInfoNewTest_url1=Gs_match_getFitProdInfoNewTest_url.replace("&prodCode=QZJ001","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_match_getFitProdInfoNewTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

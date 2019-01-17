@@ -14,20 +14,20 @@ public class Gs_prod_getProdOrdDetailTestCase {
     @DataProvider(name="Gs_prod_getProdOrdDetailTestData")
     public Object[][] Gs_prod_getProdOrdDetailTestData(){
         return new Object[][]{
+                {0,"239","523","DGP","D_MAT_PC","QZJ001"},
                 {1,"239","523","DGP","D_MAT_PC","QZJ001"},
-                {2,"239","523","DGP","D_MAT_PC","QZJ001"},
-                {1,"","","","",""},
-                {1,"333","523","DGP","D_MAT_PC","QZJ001"},
-                {1,"","523","DGP","D_MAT_PC","QZJ001"},
-                {1,"239","555","DGP","D_MAT_PC","QZJ001"},
-                {1,"239","","DGP","D_MAT_PC","QZJ001"},
-                {1,"239","523","PC","D_MAT_PC","QZJ001"},
-                {1,"239","523","","D_MAT_PC","QZJ001"},
-                {1,"239","523","DGP","D_PC","QZJ001"},
-                {1,"239","523","DGP","","QZJ001"},
-                {1,"239","523","DGP","D_MAT_PC","QZJ111"},
-                {1,"239","523","DGP","D_MAT_PC",""},
-                {2,"239","523","DGP","D_MAT_PC","QZJ001"}
+                {2,"","","","",""},
+                {2,"333","523","DGP","D_MAT_PC","QZJ001"},
+                {2,"","523","DGP","D_MAT_PC","QZJ001"},
+                {2,"239","555","DGP","D_MAT_PC","QZJ001"},
+                {2,"239","","DGP","D_MAT_PC","QZJ001"},
+                {2,"239","523","PC","D_MAT_PC","QZJ001"},
+                {2,"239","523","","D_MAT_PC","QZJ001"},
+                {2,"239","523","DGP","D_PC","QZJ001"},
+                {2,"239","523","DGP","","QZJ001"},
+                {2,"239","523","DGP","D_MAT_PC","QZJ111"},
+                {2,"239","523","DGP","D_MAT_PC",""},
+                {3,"239","523","DGP","D_MAT_PC","QZJ001"}
         };
     }
 
@@ -35,24 +35,30 @@ public class Gs_prod_getProdOrdDetailTestCase {
     public void Gs_prod_getProdOrdDetailTest(int flag,String companyId,String usrId,String platform,String platformType,String prodCode){
         String Gs_prod_getProdOrdDetailTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_prod_getProdOrdDetail_url,"239",companyId,
                 "523",usrId,"DGP",platform,"D_MAT_PC",platformType,"QZJ001",prodCode);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_prod_getProdOrdDetailTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(Gs_prod_getProdOrdDetailTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(Gs_prod_getProdOrdDetailTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String Gs_prod_getProdOrdDetailTest_url1=Gs_prod_getProdOrdDetailTest_url.replace("&prodCode=QZJ001","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_prod_getProdOrdDetailTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

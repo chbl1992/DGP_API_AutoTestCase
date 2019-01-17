@@ -14,19 +14,19 @@ public class Gs_sys_getPersonInfoByJobTestCase {
     @DataProvider(name="Gs_sys_getPersonInfoByJobTestData")
     public Object[][] Gs_sys_getPersonInfoByJobTestData(){
         return new Object[][]{
+                {0,"239","523","DGP","QS0001","D_SHOPGUIDER"},
                 {1,"239","523","DGP","QS0001","D_SHOPGUIDER"},
-                {2,"239","523","DGP","QS0001","D_SHOPGUIDER"},
-                {1,"333","523","DGP","QS0001","D_SHOPGUIDER"},
-                {1,"","523","DGP","QS0001","D_SHOPGUIDER"},
-                {1,"239","555","DGP","QS0001","D_SHOPGUIDER"},
-                {1,"239","","DGP","QS0001","D_SHOPGUIDER"},
-                {1,"239","523","PC","QS0001","D_SHOPGUIDER"},
-                {1,"239","523","","QS0001","D_SHOPGUIDER"},
-                {1,"239","523","DGP","QS1111","D_SHOPGUIDER"},
-                {1,"239","523","DGP","","D_SHOPGUIDER"},
-                {1,"239","523","DGP","QS0001","D_GUIDER"},
-                {1,"239","523","DGP","QS0001","null"},
-                {0,"239","523","DGP","QS0001","D_SHOPGUIDER"}
+                {2,"333","523","DGP","QS0001","D_SHOPGUIDER"},
+                {2,"","523","DGP","QS0001","D_SHOPGUIDER"},
+                {2,"239","555","DGP","QS0001","D_SHOPGUIDER"},
+                {2,"239","","DGP","QS0001","D_SHOPGUIDER"},
+                {2,"239","523","PC","QS0001","D_SHOPGUIDER"},
+                {2,"239","523","","QS0001","D_SHOPGUIDER"},
+                {2,"239","523","DGP","QS1111","D_SHOPGUIDER"},
+                {2,"239","523","DGP","","D_SHOPGUIDER"},
+                {2,"239","523","DGP","QS0001","D_GUIDER"},
+                {2,"239","523","DGP","QS0001","null"},
+                {3,"239","523","DGP","QS0001","D_SHOPGUIDER"}
         };
     }
 
@@ -35,24 +35,30 @@ public class Gs_sys_getPersonInfoByJobTestCase {
 
         String Gs_sys_getPersonInfoByJobTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_sys_getPersoninFobyJob_url,"239",companyId,
                 "523",usrId,"DGP",platform,"QS0001",shopCode,"D_SHOPGUIDER",jobType);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_sys_getPersonInfoByJobTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(Gs_sys_getPersonInfoByJobTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(Gs_sys_getPersonInfoByJobTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String Gs_sys_getPersonInfoByJobTest_url1=Gs_sys_getPersonInfoByJobTest_url.replace("&jobType=D_SHOPGUIDER","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(Gs_sys_getPersonInfoByJobTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

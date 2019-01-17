@@ -14,22 +14,22 @@ public class Gs_prod_getPrintByRegionTestCase {
     @DataProvider(name="gs_prod_getPrintByRegionTestData")
     public Object[][] gs_prod_getPrintByRegionTestData(){
         return new Object[][]{
+                {0,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
                 {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
-                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
-                {1,"","","","","",""},
-                {1,"QZJ111","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
-                {1,"","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","D_VENT","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","","C85B76DB6828","239","523","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB8828","239","523","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","","239","523","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","333","523","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","","523","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","555","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","","DGP"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","PC"},
-                {1,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523",""},
-                {0,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"}
+                {2,"","","","","",""},
+                {2,"QZJ111","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
+                {2,"","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","D_VENT","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","","C85B76DB6828","239","523","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB8828","239","523","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","","239","523","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","333","523","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","","523","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","555","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","","DGP"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","PC"},
+                {2,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523",""},
+                {3,"QZJ001","D_SLEEVE_VENT","C85B76DB6828","239","523","DGP"}
         };
     }
 
@@ -39,24 +39,30 @@ public class Gs_prod_getPrintByRegionTestCase {
         String gs_prod_getPrintByRegionTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_prod_getPrintByRegion_url,
                 "QZJ001",partCode,"D_SLEEVE_VENT",regionCode,"C85B76DB6828",deviceCode,"239",companyId,
                 "523",usrId,"DGP",platform);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_prod_getPrintByRegionTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(gs_prod_getPrintByRegionTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(gs_prod_getPrintByRegionTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String gs_prod_getPrintByRegionTest_url1 = gs_prod_getPrintByRegionTest_url.replace("&platform=DGP","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_prod_getPrintByRegionTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),200);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }

@@ -14,16 +14,16 @@ public class Gs_prod_getProdRegionByPrintTestCase {
     @DataProvider(name="gs_prod_getProdRegionByPrintTestData")
     public Object[][] gs_prod_getProdRegionByPrintTestData(){
         return new Object[][]{
+                {0,"239","523","DGP"},
                 {1,"239","523","DGP"},
-                {2,"239","523","DGP"},
-                {1,"","",""},
-                {1,"333","523","DGP"},
-                {1,"","523","DGP"},
-                {1,"239","555","DGP"},
-                {1,"239","","DGP"},
-                {1,"239","523","PC"},
-                {1,"239","523",""},
-                {0,"239","523","DGP"}
+                {2,"","",""},
+                {2,"333","523","DGP"},
+                {2,"","523","DGP"},
+                {2,"239","555","DGP"},
+                {2,"239","","DGP"},
+                {2,"239","523","PC"},
+                {2,"239","523",""},
+                {3,"239","523","DGP"}
         };
     }
 
@@ -31,24 +31,30 @@ public class Gs_prod_getProdRegionByPrintTestCase {
     public void gs_prod_getProdRegionByPrintTest(int flag,String companyId,String usrId,String platform){
         String gs_prod_getProdRegionByPrintTest_url= ReplaceUtils.replaceUtilsTools(UrlConfig.gs_prod_getProdRegionByPrint_url,
                 "239",companyId,"523",usrId,"DGP",platform);
-        if (flag == 1){
+        if (flag == 0){
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_prod_getProdRegionByPrintTest_url);
             response.prettyPrint();
             Assert.assertEquals(response.getStatusCode(),200);
-        }else if (flag == 2){
+        }else if (flag == 1){
             Response response = given()
                     .get(gs_prod_getProdRegionByPrintTest_url);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),401);
+        }else if (flag == 2){
+            Response response = given()
+                    .auth().oauth2(UrlConfig.access_token)
+                    .get(gs_prod_getProdRegionByPrintTest_url);
+            response.prettyPrint();
+            Assert.assertEquals(response.getStatusCode(),500);
         }else {
             String gs_prod_getProdRegionByPrintTest_url1 =gs_prod_getProdRegionByPrintTest_url.replace("&platform=DGP","");
             Response response = given()
                     .auth().oauth2(UrlConfig.access_token)
                     .get(gs_prod_getProdRegionByPrintTest_url1);
             response.prettyPrint();
-            Assert.assertEquals(response.getStatusCode(),404);
+            Assert.assertEquals(response.getStatusCode(),500);
         }
     }
 }
